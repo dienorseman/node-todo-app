@@ -102,8 +102,15 @@ const selectTask = async ( tasks = [] ) => {
                     name: `${index} ${desc} ${'::'} ${status}`
                 }
             }
-        })
+        }),
+    
     }
+
+    taskMenu.choices.unshift({
+        value: '0',
+        name: '0.'.green + ' Cancel'
+    })
+
     const { id } = await inquirer.prompt( taskMenu )
     return id
 }
@@ -128,6 +135,7 @@ const multiSelectTask = async ( tasks = [] ) => {
                 }
             }
         })
+
     }
     const { ids } = await inquirer.prompt( taskMenu )
     return ids

@@ -55,10 +55,12 @@ const main = async () => {
                 break
             case '6':
                 const taskId = await selectTask(tasks.listArr)
-                ok = await confirm('Are you sure?')
-                if ( ok ) {
-                    tasks.deleteTask( taskId )
-                    log('Task deleted')
+                if ( taskId !== '0' ) {
+                    ok = await confirm('Are you sure?')
+                    if ( ok ) {
+                        tasks.deleteTask( taskId )
+                        log('Task deleted')
+                    }
                 }
                 break
             default:
