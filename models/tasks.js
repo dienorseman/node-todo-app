@@ -1,3 +1,6 @@
+const { log, clear } = require('console');
+
+require("colors");
 const Task = require('./task');
 
 class Tasks {
@@ -23,9 +26,59 @@ class Tasks {
         }
     }
 
+
     listAllTasks() {
-        const list = this.listArr()
-        log( list )
+        log()
+        this.listArr.forEach( ( task, i ) => {
+            const index = `${i+1}.`.green;
+            const { desc, completedAt } = task;
+            const status = completedAt 
+                ? 'Completed'.green 
+                : 'Pending'.red;
+            log( `${index} ${desc} ${status}` );
+        })
+    }
+
+    listPendgingCompleted( completed = true ) {
+        log()
+        let index = 0
+        completed
+            ? log('Completed tasks: ')
+            : log( 'Pending tasks:')
+        log()
+        this.listArr.forEach( ( task ) => {
+            const { desc, completedAt } = task;
+            if ( completed ) {
+                if ( completedAt ) {
+                    index++;
+                    log( `${index.toString().green} ${desc} ${completedAt.green}` )
+                }
+            } else {
+                if ( !completedAt ) {
+                    index++;
+                    log( `${index.toString().green} ${desc}` )
+                }
+            }         
+        })
+        if ( index === 0 ) {
+            completed 
+                ? log('No completed tasks yet'.red) 
+                : log('No pending tasks yes'.red)
+        }
+    }
+
+    toggleCompleted( ids = [] ) {
+        ids.forEach( id => {
+            const task = this._list[id];
+            if ( !task.completedAt ) {
+                task.completedAt = new Date().toISOString()
+            }
+        })
+        this.listArr.forEach( task => {
+            if ( !ids.includes( task.id ) ) {
+                this._list[task.id].completedAt = null;
+            }
+        })
     }
 
     get listArr() {
@@ -37,16 +90,6 @@ class Tasks {
         return list;
     }
 
-    get listCompleted() {
-        const list = [];
-        Object.keys(this._list).forEach( key => {
-            const task = this._list[key];
-            if ( task.completedAt ) {
-                list.push( task );
-            }
-        });
-        return list;
-    }
 
 }
 

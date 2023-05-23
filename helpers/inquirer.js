@@ -44,7 +44,7 @@ const menuOpts = [
 const inquirerMenu = async () => {
     clear()
     log('============================'.green)
-    log('   Select an option'.blue)
+    log('   Select an option'.yellow)
     log('============================\n'.green)
 
     const { option } = await inquirer.prompt(menuOpts)
@@ -84,11 +84,75 @@ const readInput = async ( message ) => {
 }
 
 
+const selectTask = async ( tasks = [] ) => {
+    log()
+    const taskMenu = {
+        type: 'list',
+        name: 'id',
+        message: 'Select a task',
+        choices: tasks.map( ( task, i ) => {
+            {
+                const index = `${i + 1}`.green
+                const { desc, completedAt } = task
+                const status = completedAt 
+                ? 'Completed'.green 
+                : 'Pending'.red
+                return {
+                    value: task.id,
+                    name: `${index} ${desc} ${'::'} ${status}`
+                }
+            }
+        })
+    }
+    const { id } = await inquirer.prompt( taskMenu )
+    return id
+}
+
+const multiSelectTask = async ( tasks = [] ) => {
+    log()
+    const taskMenu = {
+        type: 'checkbox',
+        name: 'ids',
+        message: 'Select a task',
+        choices: tasks.map( ( task, i ) => {
+            {
+                const index = `${i + 1}`.green
+                const { desc, completedAt } = task
+                const status = completedAt
+                ? 'Completed'.green
+                : 'Pending'.red
+                return {
+                    value: task.id,
+                    name: `${index} ${desc} ${'::'} ${status}`,
+                    checked: (completedAt) ? true : false
+                }
+            }
+        })
+    }
+    const { ids } = await inquirer.prompt( taskMenu )
+    return ids
+}
+
+const confirm = async ( message ) => {
+    const question = [
+        {
+            type: 'confirm',
+            name: 'ok',
+            message
+        }
+    ];
+
+    const { ok } = await inquirer.prompt(question);
+    return ok;
+}
 
 module.exports = {
     inquirerMenu,
     pause,
     readInput,
+    selectTask,
+    multiSelectTask,
+    confirm
 };
 
 

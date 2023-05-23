@@ -10,6 +10,10 @@ class Task {
         this.desc = desc;
         this.completedAt = null;
     }
+
+    set markCompleted( mark=true ) {
+        this.completedAt = mark
+    }
     
 }
 
